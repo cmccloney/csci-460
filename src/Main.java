@@ -11,5 +11,23 @@ public class Main {
 		int time = 0; //time in milliseconds
 					  //takes 1 ms to put each job on a processor
 		
+		Job[] jobs = new Job[100];
+		generateJobs(jobs);
+		
+		while(i <= jobs.length) {
+			
+		}
+		
+	}
+	
+	public static void generateJobs(Job[] array) {
+		int random, count = 0;
+		
+		while(count < 100) {
+			random = (int )(Math.random() * 500 + 1);
+			Job j = new Job(count,random);
+			array[count] = j;
+			count++;
+		}
 	}
 }
