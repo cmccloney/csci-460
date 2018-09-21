@@ -14,11 +14,27 @@ public class Main {
 		int j = 0; //processor job (i-1) ran on
 		int time = 0; //time in milliseconds
 		
-		//part (b.1)
+		System.out.println("\nPart B1:");
+		b1(processors,k,i,j,time); //part (b.1)
+		System.out.println("\nPart B2:");
+		b2(processors,k,i,j,time); //part (b.2)
+	}
+	
+	public static void b2(Processor[] processors, int k, int i, int j, int time) {
+		int[] processTime = {0,0,0}; //used for processing jobs
+		int process = 0; //which processor to use for job i
+		//Job[] jobs = new Job[12]; //12 manually entered jobs
+		Job[] jobs = new Job[3]; //testing with just 3 jobs first
+		initJobs(jobs);
+		
+		
+	}
+	
+	public static void b1(Processor[] processors, int k, int i, int j, int time){
 		int maximum = 0;
 		int minimum = 1000000;
-		int average = -1;
-		int std_dev = -1; //standard deviation
+		double average = -1;
+		double std_dev = -1; //standard deviation
 		int[] times = new int[100]; //store 100 elapsed times of processing 100 random jobs
 		int[] processTime = {0,0,0}; //used for processing jobs
 		int process = 0; //which processor to use for job i
@@ -35,13 +51,13 @@ public class Main {
 						processors[a].switchState(); //processor is now free to process more jobs
 					}
 				}
-				process = (j+1)%(k+1); //processor to run job on
 				//System.out.println(process + " " + i);
 				if(processors[process].isFree()) { //if processor is free
 					processors[process].processJob(jobs[i]); //process job
 					processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
 					i++; //process next job, because they're arriving every 1 ms we don't need to worry about arrival time/queue
 				}
+				process = (j+1)%(k+1); //processor to run job on
 				j = process; //j is now the processor job (i-1) ran on
 			}
 			times[round] = time;
@@ -53,11 +69,16 @@ public class Main {
 			}
 			round++; //increase round
 		}
-		int sum = 0;
+		double sum = 0.0;
 		for(int y = 0; y < 100; y++) {
 			sum += times[y];
 		}
 		average = sum / 100; //compute average
+		sum = 0;
+		for(int y = 0; y < 100; y++) {
+			sum += (times[y] - average)*(times[y] - average);
+		}
+		std_dev = Math.sqrt((sum / 100));
 		System.out.println("Average is " + average + " ms");
 		System.out.println("Minimum is " + minimum + " ms");
 		System.out.println("Maximum is " + maximum + " ms");
@@ -73,5 +94,20 @@ public class Main {
 			array[count] = j;
 			count++;
 		}
+	}
+	
+	public static void initJobs(Job[] array) { //used to manually enter 12 jobs for part b.2 and c
+		array[0] = new Job(4,9);
+		array[1] = new Job(15,2);
+		array[2] = new Job(18,16);
+		/*array[3] = new Job(20,3); //testing with just 3 jobs first
+		array[4] = new Job(26,29);
+		array[5] = new Job(29,198);
+		array[6] = new Job(35,7);
+		array[7] = new Job(45,170);
+		array[8] = new Job(57,180);
+		array[9] = new Job(83,178);
+		array[10] = new Job(88,73);
+		array[11] = new Job(95,8);*/
 	}
 }
