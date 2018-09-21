@@ -12,7 +12,11 @@ public class Processor {
 	}
 	
 	public void processJob(Job j) {
-		count += j.getProccesing();
+		count += j.getProcessing();
 		free = false;
+	}
+	
+	public void switchState() {
+		free = true;
 	}
 }

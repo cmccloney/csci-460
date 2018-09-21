@@ -11,7 +11,7 @@ public class Job {
 		return arrival_time;
 	}
 	
-	public int getProccesing() {
+	public int getProcessing() {
 		return processing_time;
 	}
 	
