@@ -21,13 +21,47 @@ public class Main {
 	}
 	
 	public static void b2(Processor[] processors, int k, int i, int j, int time) {
+		i = 0; //re-initialize variables
+		j = 0;
+		time = 0;
+		for(int a = 0; a <= k; a++) { //reset processors' status
+			processors[a].free = true;
+		}
 		int[] processTime = {0,0,0}; //used for processing jobs
 		int process = 0; //which processor to use for job i
-		//Job[] jobs = new Job[12]; //12 manually entered jobs
-		Job[] jobs = new Job[3]; //testing with just 3 jobs first
+		Job[] jobs = new Job[7]; //12 manually entered jobs
 		initJobs(jobs);
-		
-		
+		while(i < jobs.length) {
+			time++; //takes 1 ms to put each job on a processor, so start with increasing time
+			if(time >= jobs[i].getArrival()) { //if the next job has arrived
+				for(int a = 0; a <= k; a++) {
+					if(processTime[a] >= time  && !processors[a].isFree()) { //processor has finished processing job
+						processors[a].switchState(); //processor is now free to process more jobs
+					}
+				}
+				if(processors[process].isFree()) { //if processor is free
+					processors[process].processJob(jobs[i]); //process job
+					processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
+				}
+				process = (j+1)%(k+1); //processor to run job on
+				j = process; //j is now the processor job (i-1) ran on
+				i++;
+			}
+		}
+		boolean finished = false;
+		while(!finished) { //used for final job, because i == jobs.length
+			time++; //increase time
+			finished = true;
+			for(int a = 0; a <= k; a++) { //for each processor
+				if(processTime[a] <= time && !processors[a].isFree()) { //processor has finished processing job
+					processors[a].switchState(); //processor is now free
+				}
+				if(!processors[a].isFree()) { //if there is still a processor processing a job, keep looping
+					finished = false;
+				}
+			}
+		}
+		System.out.println(time);
 	}
 	
 	public static void b1(Processor[] processors, int k, int i, int j, int time){
@@ -45,13 +79,12 @@ public class Main {
 			i = 0;
 			generateJobs(jobs); //generate 100 jobs with random processing time, arriving every 1 ms
 			while(i < jobs.length) {
-				time++; //takes 1 ms to put each job on a processor
+				time++; //takes 1 ms to put each job on a processor, so start with increasing time
 				for(int a = 0; a <= k; a++) {
-					if(processTime[a] == time) { //processor has finished processing job
+					if(processTime[a] == time  && !processors[a].isFree()) { //processor has finished processing job
 						processors[a].switchState(); //processor is now free to process more jobs
 					}
 				}
-				//System.out.println(process + " " + i);
 				if(processors[process].isFree()) { //if processor is free
 					processors[process].processJob(jobs[i]); //process job
 					processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
@@ -100,11 +133,11 @@ public class Main {
 		array[0] = new Job(4,9);
 		array[1] = new Job(15,2);
 		array[2] = new Job(18,16);
-		/*array[3] = new Job(20,3); //testing with just 3 jobs first
+		array[3] = new Job(20,3);
 		array[4] = new Job(26,29);
 		array[5] = new Job(29,198);
 		array[6] = new Job(35,7);
-		array[7] = new Job(45,170);
+		/*array[7] = new Job(45,170);
 		array[8] = new Job(57,180);
 		array[9] = new Job(83,178);
 		array[10] = new Job(88,73);
