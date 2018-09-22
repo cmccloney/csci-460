@@ -1,7 +1,7 @@
 
 public class Processor {
 	boolean free = true;
-	int count = 0;
+	int num = -1;
 	
 	public Processor() {
 		
@@ -12,8 +12,15 @@ public class Processor {
 	}
 	
 	public void processJob(Job j) {
-		count += j.getProcessing();
 		free = false;
+	}
+	
+	public void jobNumber(int id) {
+		num = id;
+	}
+	
+	public int getJobNumber() {
+		return num;
 	}
 	
 	public void switchState() {

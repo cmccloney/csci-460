@@ -24,29 +24,39 @@ public class Main {
 		i = 0; //re-initialize variables
 		j = 0;
 		time = 0;
+		int turnaroundTime = 0;
+		boolean inQueue = false; //used to see if there are any jobs waiting in the queue
 		for(int a = 0; a <= k; a++) { //reset processors' status
 			processors[a].free = true;
 		}
 		int[] processTime = {0,0,0}; //used for processing jobs
 		int process = 0; //which processor to use for job i
-		Job[] jobs = new Job[7]; //12 manually entered jobs
+		Job[] jobs = new Job[12]; //12 manually entered jobs
 		initJobs(jobs);
 		while(i < jobs.length) {
-			time++; //takes 1 ms to put each job on a processor, so start with increasing time
-			if(time >= jobs[i].getArrival()) { //if the next job has arrived
-				for(int a = 0; a <= k; a++) {
-					if(processTime[a] >= time  && !processors[a].isFree()) { //processor has finished processing job
-						processors[a].switchState(); //processor is now free to process more jobs
-					}
+			for(int a = 0; a <= k; a++) {
+				if(processTime[a] <= time  && !processors[a].isFree()) { //processor has finished processing job
+					processors[a].switchState(); //processor is now free to process more jobs
+					turnaroundTime = time - jobs[processors[a].getJobNumber()].getArrival();
+					System.out.println("The turnaround time for job " + processors[a].getJobNumber() + " is " + turnaroundTime + " ms");
 				}
+			}
+			if(time >= jobs[i].getArrival()) { //if the next job has arrived
 				if(processors[process].isFree()) { //if processor is free
 					processors[process].processJob(jobs[i]); //process job
+					processors[process].jobNumber(i); //which job is being processed is recorded
+					inQueue = false;  //move on to the next job ie. let i increase
 					processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
+					process = (j+1)%(k+1); //processor to run job on
+					j = process; //j is now the processor job (i-1) ran on
+				}else {
+					inQueue = true;
 				}
-				process = (j+1)%(k+1); //processor to run job on
-				j = process; //j is now the processor job (i-1) ran on
-				i++;
+				if(!inQueue) {
+					i++;
+				}
 			}
+			time++; //takes 1 ms to put each job on a processor, so start with increasing time
 		}
 		boolean finished = false;
 		while(!finished) { //used for final job, because i == jobs.length
@@ -55,13 +65,16 @@ public class Main {
 			for(int a = 0; a <= k; a++) { //for each processor
 				if(processTime[a] <= time && !processors[a].isFree()) { //processor has finished processing job
 					processors[a].switchState(); //processor is now free
+					turnaroundTime = time - jobs[processors[a].getJobNumber()].getArrival();
+					System.out.println("The turnaround time for job " + processors[a].getJobNumber() + " is " + turnaroundTime + " ms");
 				}
 				if(!processors[a].isFree()) { //if there is still a processor processing a job, keep looping
 					finished = false;
 				}
 			}
 		}
-		System.out.println(time);
+		int temp = k+1;
+		System.out.println("The total turnaround time was " + time + " ms for " + temp + " processors");
 	}
 	
 	public static void b1(Processor[] processors, int k, int i, int j, int time){
@@ -69,6 +82,7 @@ public class Main {
 		int minimum = 1000000;
 		double average = -1;
 		double std_dev = -1; //standard deviation
+		boolean inQueue = false; //used to see if there are any jobs waiting in the queue
 		int[] times = new int[100]; //store 100 elapsed times of processing 100 random jobs
 		int[] processTime = {0,0,0}; //used for processing jobs
 		int process = 0; //which processor to use for job i
@@ -87,8 +101,11 @@ public class Main {
 				}
 				if(processors[process].isFree()) { //if processor is free
 					processors[process].processJob(jobs[i]); //process job
+					inQueue = false; //move on to the next job ie. let i increase
 					processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
-					i++; //process next job, because they're arriving every 1 ms we don't need to worry about arrival time/queue
+					if(!inQueue) {
+						i++; //process next job, because they're arriving every 1 ms we don't need to worry about arrival time/queue
+					}
 				}
 				process = (j+1)%(k+1); //processor to run job on
 				j = process; //j is now the processor job (i-1) ran on
@@ -137,10 +154,10 @@ public class Main {
 		array[4] = new Job(26,29);
 		array[5] = new Job(29,198);
 		array[6] = new Job(35,7);
-		/*array[7] = new Job(45,170);
+		array[7] = new Job(45,170);
 		array[8] = new Job(57,180);
 		array[9] = new Job(83,178);
 		array[10] = new Job(88,73);
-		array[11] = new Job(95,8);*/
+		array[11] = new Job(95,8);
 	}
 }
