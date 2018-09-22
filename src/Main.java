@@ -18,13 +18,13 @@ public class Main {
 		try{
 			PrintWriter writer = new PrintWriter("ouput.txt","UTF-8");
 			writer.println("There are " + (k + 1) + " processors");
-			writer.println("\n\nPart B1:");
+			writer.println("\nPart B1:");
 			b1(processors,k,i,j,time,writer); //part (b.1)
-			writer.println("\n\nPart B2:");
+			writer.println("\nPart B2:");
 			b2(processors,k,i,j,time,writer); //part (b.2)
-			writer.println("\n\nPart C (12 jobs):");
+			writer.println("\nPart C (12 jobs):");
 			c1(processors,k,i,j,time,writer); //part c
-			writer.println("\n\nPart C (100 random jobs):");
+			writer.println("\nPart C (100 random jobs):");
 			c2(processors,k,i,j,time,writer); //part c
 			writer.close();
 		} catch(IOException e) {
@@ -68,7 +68,6 @@ public class Main {
 					}
 					if(!inQueue) {
 						processors[process].processJob(jobs[i]); //process job
-						processors[process].jobNumber(i); //which job is being processed is recorded
 						processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
 						//process = (j+1)%(k+1); //processor to run job on
 						//j = process; //j is now the processor job (i-1) ran on
@@ -145,7 +144,6 @@ public class Main {
 				}
 				if(!inQueue) {
 					processors[process].processJob(jobs[i]); //process job
-					processors[process].jobNumber(i); //which job is being processed is recorded
 					processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
 					//process = (j+1)%(k+1); //processor to run job on
 					//j = process; //j is now the processor job (i-1) ran on
@@ -192,7 +190,6 @@ public class Main {
 			if(time >= jobs[i].getArrival()) { //if the next job has arrived
 				if(processors[process].isFree()) { //if processor is free
 					processors[process].processJob(jobs[i]); //process job
-					processors[process].jobNumber(i); //which job is being processed is recorded
 					inQueue = false;  //move on to the next job ie. let i increase
 					processTime[process] = jobs[i].getProcessing() + time; //get processing time for this processor
 					process = (j+1)%(k+1); //processor to run job on
@@ -307,3 +304,41 @@ public class Main {
 		array[11] = new Job(95,8);
 	}
 }
+
+class Job { //class for creating jobs
+	int arrival_time, processing_time;
+	
+	public Job(int arrival, int processing) {
+		arrival_time = arrival;
+		processing_time = processing + 1; //add 1 to account for time spent getting job onto processor
+	}
+	
+	public int getArrival() { //get the arrival time in ms
+		return arrival_time;
+	}
+	
+	public int getProcessing() { //get the processing time in ms
+		return processing_time;
+	}
+	
+}
+
+class Processor { //class for creating processors
+	boolean free = true;
+	
+	public Processor() {
+		
+	}
+	
+	public boolean isFree() { //is the processor currently free
+		return free;
+	}
+	
+	public void processJob(Job j) { //process job j
+		free = false;
+	}
+	public void switchState() { //switch the processor's state from busy to free
+		free = true;
+	}
+}
+
