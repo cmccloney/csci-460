@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Main {
 	static int std_no = 8677;
@@ -5,7 +7,6 @@ public class Main {
 	static Processor[] processors = new Processor[k];
 	
 	public static void main(String[] args) {
-		System.out.println("There are " + k + " processors");
 		k = k-1;
 		for(int z = 0; z <= k; z++) {
 			processors[z] = new Processor();
@@ -14,17 +15,24 @@ public class Main {
 		int j = 0; //processor job (i-1) ran on
 		int time = 0; //time in milliseconds
 		
-		System.out.println("\nPart B1:");
-		b1(processors,k,i,j,time); //part (b.1)
-		System.out.println("\nPart B2:");
-		b2(processors,k,i,j,time); //part (b.2)
-		System.out.println("\nPart C (12 jobs):");
-		c1(processors,k,i,j,time); //part c.1
-		System.out.println("\nPart C (100 random jobs):");
-		c2(processors,k,i,j,time); //part c.1
+		try{
+			PrintWriter writer = new PrintWriter("ouput.txt","UTF-8");
+			writer.println("There are " + (k + 1) + " processors");
+			writer.println("\n\nPart B1:");
+			b1(processors,k,i,j,time,writer); //part (b.1)
+			writer.println("\n\nPart B2:");
+			b2(processors,k,i,j,time,writer); //part (b.2)
+			writer.println("\n\nPart C (12 jobs):");
+			c1(processors,k,i,j,time,writer); //part c
+			writer.println("\n\nPart C (100 random jobs):");
+			c2(processors,k,i,j,time,writer); //part c
+			writer.close();
+		} catch(IOException e) {
+			
+		}
 	}
 	
-	public static void c2(Processor[] processors, int k, int i, int j, int time) {
+	public static void c2(Processor[] processors, int k, int i, int j, int time, PrintWriter writer) {
 		int maximum = 0;
 		int minimum = 1000000;
 		double average = -1;
@@ -102,13 +110,13 @@ public class Main {
 			sum += (times[y] - average)*(times[y] - average);
 		}
 		std_dev = Math.sqrt((sum / 100));
-		System.out.println("Average is " + average + " ms");
-		System.out.println("Minimum is " + minimum + " ms");
-		System.out.println("Maximum is " + maximum + " ms");
-		System.out.println("Standard Deviation is " + std_dev + " ms");
+		writer.println("Average is " + average + " ms");
+		writer.println("Minimum is " + minimum + " ms");
+		writer.println("Maximum is " + maximum + " ms");
+		writer.println("Standard Deviation is " + std_dev + " ms");
 	}
 	
-	public static void c1(Processor[] processors, int k, int i, int j, int time) {
+	public static void c1(Processor[] processors, int k, int i, int j, int time, PrintWriter writer) {
 		i = 0; //re-initialize variables
 		j = 0;
 		time = 0;
@@ -159,12 +167,11 @@ public class Main {
 				}
 			}
 		}
-		int temp = k+1;
 		int turnAround = time - jobs[0].getArrival();
-		System.out.println("The total turnaround time was " + turnAround + " ms for " + temp + " processors");
+		writer.println("The total turnaround time was " + turnAround + " ms for " + (k+1) + " processors");
 	}
 	
-	public static void b2(Processor[] processors, int k, int i, int j, int time) {
+	public static void b2(Processor[] processors, int k, int i, int j, int time, PrintWriter writer) {
 		i = 0; //re-initialize variables
 		j = 0;
 		time = 0;
@@ -212,12 +219,11 @@ public class Main {
 				}
 			}
 		}
-		int temp = k+1;
 		int turnAround = time - jobs[0].getArrival();
-		System.out.println("The total turnaround time was " + turnAround + " ms for " + temp + " processors");
+		writer.println("The total turnaround time was " + turnAround + " ms for " + (k+1) + " processors");
 	}
 	
-	public static void b1(Processor[] processors, int k, int i, int j, int time){
+	public static void b1(Processor[] processors, int k, int i, int j, int time, PrintWriter writer){
 		int maximum = 0;
 		int minimum = 1000000;
 		double average = -1;
@@ -269,10 +275,10 @@ public class Main {
 			sum += (times[y] - average)*(times[y] - average);
 		}
 		std_dev = Math.sqrt((sum / 100));
-		System.out.println("Average is " + average + " ms");
-		System.out.println("Minimum is " + minimum + " ms");
-		System.out.println("Maximum is " + maximum + " ms");
-		System.out.println("Standard Deviation is " + std_dev + " ms");
+		writer.println("Average is " + average + " ms");
+		writer.println("Minimum is " + minimum + " ms");
+		writer.println("Maximum is " + maximum + " ms");
+		writer.println("Standard Deviation is " + std_dev + " ms");
 	}
 	
 	public static void generateJobs(Job[] array) { //used to generate 100 jobs with random processing time between 1 ms and 500 ms
