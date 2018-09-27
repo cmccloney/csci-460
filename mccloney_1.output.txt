@@ -1,10 +1,10 @@
 There are 3 processors
 
 Part B1:
-Average is 422651.98 ms
-Minimum is 6928 ms
-Maximum is 838496 ms
-Standard Deviation is 242093.18180035477 ms
+Average is 296781.92 ms
+Minimum is 8642 ms
+Maximum is 611165 ms
+Standard Deviation is 176597.23683957686 ms
 
 Part B2:
 The total turnaround time was 420 ms for 3 processors
@@ -13,7 +13,7 @@ Part C (12 jobs):
 The total turnaround time was 391 ms for 3 processors
 
 Part C (100 random jobs):
-Average is 8624.5 ms
-Minimum is 8575 ms
-Maximum is 8674 ms
+Average is 8694.5 ms
+Minimum is 8645 ms
+Maximum is 8744 ms
 Standard Deviation is 28.86607004772212 ms

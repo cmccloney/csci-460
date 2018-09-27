@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class Main {
+public class mccloney_1 { //not named Main due to the format requested
 	static int std_no = 8677;
 	static int k = std_no % 3 + 2;
 	static Processor[] processors = new Processor[k];
@@ -16,7 +16,7 @@ public class Main {
 		int time = 0; //time in milliseconds
 		
 		try{
-			PrintWriter writer = new PrintWriter("ouput.txt","UTF-8");
+			PrintWriter writer = new PrintWriter("mccloney_1.output.txt","UTF-8");
 			writer.println("There are " + (k + 1) + " processors");
 			writer.println("\nPart B1:");
 			b1(processors,k,i,j,time,writer); //part (b.1)
